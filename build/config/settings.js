@@ -1,4 +1,4 @@
-const { PORT, PRIVATE_KEY_FOR_JWT, EMAIL_ACCESS_KEY_ID, EMAIL_SECRET_ACCESS_KEY, EMAIL_REGION, APP_URL, ROOT_USER_USERNAME, ROOT_USER_PASSWORD, NO_REPLY_EMAIL } = process.env;
+const { PORT, PRIVATE_KEY_FOR_JWT, EMAIL_ACCESS_KEY_ID, EMAIL_SECRET_ACCESS_KEY, EMAIL_REGION, APP_URL, ROOT_USER_USERNAME, ROOT_USER_PASSWORD, NO_REPLY_EMAIL, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_BUCKET_NAME, ENV_NAME } = process.env;
 if (!PRIVATE_KEY_FOR_JWT) {
     throw Error('Missing jwt private key in .env');
 }
@@ -27,6 +27,14 @@ if (!NO_REPLY_EMAIL) {
     throw Error("Missing NO_REPLY_EMAIL in .env");
 }
 ;
+if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_BUCKET_NAME) {
+    throw Error("Missing AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_BUCKET_NAME in .env");
+}
+;
+if (!ENV_NAME) {
+    throw Error('Missing ENV_NAME in .env');
+}
+;
 export const settings = {
     port: PORT ?? 8000,
     jwt: {
@@ -48,5 +56,11 @@ export const settings = {
         username: ROOT_USER_USERNAME ?? "",
         password: ROOT_USER_PASSWORD ?? "",
     },
-    noReplyEmailId: NO_REPLY_EMAIL
+    noReplyEmailId: NO_REPLY_EMAIL,
+    awsBucketCredentials: {
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+        bucketName: AWS_BUCKET_NAME
+    },
+    environment: ENV_NAME
 };

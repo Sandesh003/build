@@ -29,3 +29,6 @@ export const UserRoleEnumValue = {
     SUPER_ADMIN: 'SUPER_ADMIN',
     TEAM_MEMBER: 'TEAM_MEMBER',
 };
+export const ZodErrorMessageEnumValue = {
+    REQUIRED: 'Required*'
+};
