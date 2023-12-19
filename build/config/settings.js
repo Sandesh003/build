@@ -1,4 +1,4 @@
-const { PORT, PRIVATE_KEY_FOR_JWT, EMAIL_ACCESS_KEY_ID, EMAIL_SECRET_ACCESS_KEY, EMAIL_REGION, APP_URL, ROOT_USER_USERNAME, ROOT_USER_PASSWORD, NO_REPLY_EMAIL, GOOGLE_CLIENT_ID, GOOGLE_SECRET, GOOGLE_CALLBACK_URL } = process.env;
+const { PORT, PRIVATE_KEY_FOR_JWT, EMAIL_ACCESS_KEY_ID, EMAIL_SECRET_ACCESS_KEY, EMAIL_REGION, APP_URL, ROOT_USER_USERNAME, ROOT_USER_PASSWORD, NO_REPLY_EMAIL, GOOGLE_CLIENT_ID, GOOGLE_SECRET, GOOGLE_CALLBACK_URL, AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_BUCKET_NAME, ENV_NAME } = process.env;
 if (!PRIVATE_KEY_FOR_JWT) {
     throw Error('Missing jwt private key in .env');
 }
@@ -29,6 +29,14 @@ if (!NO_REPLY_EMAIL) {
 if (!GOOGLE_CLIENT_ID || !GOOGLE_SECRET || !GOOGLE_CALLBACK_URL) {
     throw Error("Missing GOOGLE_CLIENT_ID, GOOGLE_SECRET and GOOGLE_CALLBACK_URL in .env");
 }
+if (!AWS_ACCESS_KEY_ID || !AWS_SECRET_ACCESS_KEY || !AWS_BUCKET_NAME) {
+    throw Error("Missing AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY and AWS_BUCKET_NAME in .env");
+}
+;
+if (!ENV_NAME) {
+    throw Error('Missing ENV_NAME in .env');
+}
+;
 export const settings = {
     port: PORT ?? 8000,
     jwt: {
@@ -57,4 +65,11 @@ export const settings = {
         clientSecret: GOOGLE_SECRET,
         callbackUrl: GOOGLE_CALLBACK_URL,
     },
+    awsBucketCredentials: {
+        accessKeyId: AWS_ACCESS_KEY_ID,
+        secretAccessKey: AWS_SECRET_ACCESS_KEY,
+        bucketName: AWS_BUCKET_NAME
+    },
+    environment: ENV_NAME,
+    domain: ".projectchef.io"
 };

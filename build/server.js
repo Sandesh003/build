@@ -17,6 +17,7 @@ import morgan from "morgan";
 import passport from "passport";
 import "./services/passport.services.js";
 import session from "express-session";
+import fileUpload from "express-fileupload";
 // import compression from 'compression';
 const app = express();
 // compression
@@ -40,6 +41,8 @@ app.use(passport.session());
 app.use(cookieParser());
 // Helmet configuration
 app.use(helmet());
+//File upload
+app.use(fileUpload());
 // JSON data handling
 app.use(express.json());
 app.set("json spaces", 2);

@@ -25,15 +25,19 @@ router.get("/google/callback", passport.authenticate("google", {
     const token = createJwtToken(tokenPayload);
     res.cookie(settings.jwt.tokenCookieKey, token, {
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
+        httpOnly: false,
         secure: true,
+        sameSite: 'none',
+        domain: settings.domain
     });
     // Refresh-Token
     const refreshToken = createJwtToken(tokenPayload, true);
     res.cookie(settings.jwt.refreshTokenCookieKey, refreshToken, {
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
+        httpOnly: false,
         secure: true,
+        sameSite: 'none',
+        domain: settings.domain
     });
     res.redirect(`${settings.appURL}`);
 });

@@ -1,14 +1,14 @@
 import AWS from "aws-sdk";
 import { settings } from "../config/settings.js";
 export class AwsUploadService {
-    static async uploadFileWithContent(fileName, fileContent) {
+    static async uploadFileWithContent(fileName, fileContent, fileType) {
         AWS.config.update({
             accessKeyId: settings.awsBucketCredentials.accessKeyId,
             secretAccessKey: settings.awsBucketCredentials.secretAccessKey,
         });
         const bucketName = settings.awsBucketCredentials.bucketName;
         const params = {
-            Bucket: `${bucketName}/${settings.environment}/user-profiles`,
+            Bucket: `${bucketName}/${settings.environment}/${fileType}`,
             Key: fileName,
             Body: fileContent,
             contentType: "text/plain",

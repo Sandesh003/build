@@ -74,6 +74,18 @@ export const createOrganisation = async (req, res) => {
             nonWorkingDays: nonWorkingDays,
         },
     });
+    const findUser = await prisma.user.findFirst({
+        where: { userId: req.userId },
+    });
+    if (findUser?.country === null) {
+        await prisma.user.update({
+            where: { userId: req.userId },
+            data: {
+                country: country,
+            },
+        });
+    }
+    ;
     return new SuccessResponse(StatusCodes.CREATED, organisation, "Organisation created successfully").send(res);
 };
 export const updateOrganisation = async (req, res) => {

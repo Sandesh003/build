@@ -52,13 +52,17 @@ export const signUp = async (req, res) => {
         }
         res.cookie(settings.jwt.tokenCookieKey, token, {
             maxAge: 1 * 24 * 60 * 60 * 1000,
-            httpOnly: true,
+            httpOnly: false,
             secure: true,
+            sameSite: 'none',
+            domain: settings.domain
         });
         res.cookie(settings.jwt.refreshTokenCookieKey, refreshToken, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            httpOnly: true,
+            httpOnly: false,
             secure: true,
+            sameSite: 'none',
+            domain: settings.domain
         });
         return new SuccessResponse(StatusCodes.CREATED, user, "Sign up successfully").send(res);
     }
@@ -96,23 +100,26 @@ export const login = async (req, res) => {
         const token = createJwtToken(tokenPayload);
         res.cookie(settings.jwt.tokenCookieKey, token, {
             maxAge: 1 * 24 * 60 * 60 * 1000,
-            httpOnly: true,
+            httpOnly: false,
             secure: true,
+            sameSite: 'none',
+            domain: settings.domain
         });
         const refreshToken = createJwtToken(tokenPayload, true);
         res.cookie(settings.jwt.refreshTokenCookieKey, refreshToken, {
             maxAge: 7 * 24 * 60 * 60 * 1000,
-            httpOnly: true,
+            httpOnly: false,
             secure: true,
+            sameSite: 'none',
+            domain: settings.domain
         });
         const { provider, ...userWithoutProvider } = user;
         return new SuccessResponse(StatusCodes.OK, { user: userWithoutProvider }, "Login successfully").send(res);
     }
-    ;
     throw new UnAuthorizedError();
 };
 export const getAccessToken = (req, res) => {
-    const refreshTokenCookie = authRefreshTokenSchema.parse(req.cookies["refresh-token"]);
+    const refreshTokenCookie = authRefreshTokenSchema.parse(req.cookies[settings.jwt.refreshTokenCookieKey]);
     const decoded = verifyJwtToken(refreshTokenCookie);
     const tokenPayload = {
         userId: decoded.userId,
@@ -122,14 +129,18 @@ export const getAccessToken = (req, res) => {
     const token = createJwtToken(tokenPayload);
     res.cookie(settings.jwt.tokenCookieKey, token, {
         maxAge: 1 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
+        httpOnly: false,
         secure: true,
+        sameSite: 'none',
+        domain: settings.domain
     });
     const refreshToken = createJwtToken(tokenPayload, true);
     res.cookie(settings.jwt.refreshTokenCookieKey, refreshToken, {
         maxAge: 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true,
+        httpOnly: false,
         secure: true,
+        sameSite: 'none',
+        domain: settings.domain
     });
     return new SuccessResponse(StatusCodes.OK, null, "Access token retrived successfully").send(res);
 };
