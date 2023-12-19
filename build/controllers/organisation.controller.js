@@ -2,7 +2,7 @@ import { getClientByTenantId } from "../config/db.js";
 import { BadRequestError, ForbiddenError, NotFoundError, SuccessResponse, } from "../config/apiError.js";
 import { StatusCodes } from "http-status-codes";
 import { createOrganisationSchema, organisationIdSchema, updateOrganisationSchema, addOrganisationMemberSchema, } from "../schemas/organisationSchema.js";
-import { UserRoleEnum, UserStatusEnum } from "@prisma/client";
+import { UserProviderTypeEnum, UserRoleEnum, UserStatusEnum } from "@prisma/client";
 import { encrypt } from "../utils/encryption.js";
 import { uuidSchema } from "../schemas/commonSchema.js";
 import { ZodError } from "zod";
@@ -74,18 +74,6 @@ export const createOrganisation = async (req, res) => {
             nonWorkingDays: nonWorkingDays,
         },
     });
-    const findUser = await prisma.user.findFirst({
-        where: { userId: req.userId },
-    });
-    if (findUser?.country === null) {
-        await prisma.user.update({
-            where: { userId: req.userId },
-            data: {
-                country: country,
-            },
-        });
-    }
-    ;
     return new SuccessResponse(StatusCodes.CREATED, organisation, "Organisation created successfully").send(res);
 };
 export const updateOrganisation = async (req, res) => {
@@ -144,8 +132,13 @@ export const addOrganisationMember = async (req, res) => {
         const newUser = await prisma.user.create({
             data: {
                 email: member.email,
-                password: hashedPassword,
                 status: UserStatusEnum.ACTIVE,
+                provider: {
+                    create: {
+                        idOrPassword: hashedPassword,
+                        providerType: UserProviderTypeEnum.EMAIL
+                    }
+                },
                 userOrganisation: {
                     create: {
                         role: member.role,

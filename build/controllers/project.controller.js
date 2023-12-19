@@ -61,7 +61,7 @@ export const createProject = async (req, res) => {
         throw new BadRequestError('userId not found!');
     }
     ;
-    const { projectName, projectDescription, startDate, estimatedEndDate, estimatedBudget, defaultView, currency } = createProjectSchema.parse(req.body);
+    const { projectName, projectDescription, startDate, estimatedEndDate, estimatedBudget, defaultView } = createProjectSchema.parse(req.body);
     const prisma = await getClientByTenantId(req.tenantId);
     const project = await prisma.project.create({
         data: {
@@ -74,8 +74,7 @@ export const createProject = async (req, res) => {
             estimatedBudget: estimatedBudget,
             defaultView: defaultView,
             createdByUserId: req.userId,
-            updatedByUserId: req.userId,
-            currency: currency
+            updatedByUserId: req.userId
         }
     });
     return new SuccessResponse(StatusCodes.CREATED, project, 'project created successfully').send(res);

@@ -1,13 +1,12 @@
 import { z } from "zod";
-import { ProjectDefaultViewEnumValue, ProjectStatusEnumValue, ZodErrorMessageEnumValue } from "./enums.js";
+import { ProjectDefaultViewEnumValue, ProjectStatusEnumValue } from "./enums.js";
 export const createProjectSchema = z.object({
-    projectName: z.string({ required_error: ZodErrorMessageEnumValue.REQUIRED }),
-    projectDescription: z.string({ required_error: ZodErrorMessageEnumValue.REQUIRED }),
-    startDate: z.coerce.date({ required_error: ZodErrorMessageEnumValue.REQUIRED }),
-    estimatedEndDate: z.coerce.date({ required_error: ZodErrorMessageEnumValue.REQUIRED }),
-    estimatedBudget: z.string({ required_error: ZodErrorMessageEnumValue.REQUIRED }),
-    defaultView: z.nativeEnum(ProjectDefaultViewEnumValue, { required_error: ZodErrorMessageEnumValue.REQUIRED }),
-    currency: z.string({ required_error: ZodErrorMessageEnumValue.REQUIRED }),
+    projectName: z.string(),
+    projectDescription: z.string(),
+    startDate: z.coerce.date(),
+    estimatedEndDate: z.coerce.date(),
+    estimatedBudget: z.string(),
+    defaultView: z.nativeEnum(ProjectDefaultViewEnumValue)
 });
 export const updateProjectSchema = z.object({
     projectName: z.string().min(1).optional(),
@@ -19,10 +18,9 @@ export const updateProjectSchema = z.object({
     progressionPercentage: z.string().min(1).optional(),
     actualCost: z.string().min(1).optional(),
     budgetTrack: z.string().min(1).optional(),
-    timeTrack: z.string().min(1).optional(),
-    currency: z.string().min(1).optional(),
+    timeTrack: z.string().min(1).optional()
 });
 export const projectIdSchema = z.string().uuid();
 export const projectStatusSchema = z.object({
-    status: z.nativeEnum(ProjectStatusEnumValue),
+    status: z.nativeEnum(ProjectStatusEnumValue)
 });

@@ -1,18 +1,18 @@
 import { z } from "zod";
-import { TaskDependenciesEnumValue, TaskStatusEnumValue, ZodErrorMessageEnumValue } from "./enums.js";
+import { TaskDependenciesEnumValue, TaskStatusEnumValue } from "./enums.js";
 export const taskIdSchema = z.string().uuid();
 export const createTaskSchema = z.object({
-    taskName: z.string({ required_error: ZodErrorMessageEnumValue.REQUIRED }),
-    taskDescription: z.string({ required_error: ZodErrorMessageEnumValue.REQUIRED }).optional(),
-    startDate: z.coerce.date({ required_error: ZodErrorMessageEnumValue.REQUIRED }),
-    duration: z.number({ required_error: ZodErrorMessageEnumValue.REQUIRED }),
-    assginedToUserId: z.string({ required_error: ZodErrorMessageEnumValue.REQUIRED }).uuid(),
+    taskName: z.string(),
+    taskDescription: z.string().optional(),
+    startDate: z.coerce.date(),
+    duration: z.number(),
+    assginedToUserId: z.string().uuid(),
     documentAttachments: z.object({
         name: z.string(),
         url: z.string()
     }).array().optional(),
     dependencies: z.nativeEnum(TaskDependenciesEnumValue),
-    milestoneIndicator: z.boolean({ required_error: ZodErrorMessageEnumValue.REQUIRED }),
+    milestoneIndicator: z.boolean(),
     flag: z.string().optional(),
 });
 export const updateTaskSchema = z.object({
